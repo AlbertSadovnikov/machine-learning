@@ -15,7 +15,10 @@ from sklearn.model_selection import train_test_split
 from utils import preprocess_features, train_predict
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, AdaBoostClassifier
+from sklearn.linear_model import SGDClassifier, LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
 from sklearn.model_selection import KFold, GridSearchCV
 from sklearn.metrics import accuracy_score
 
@@ -61,7 +64,7 @@ clf = GaussianNB()
 clf.fit(X_train, y_train)
 y_p = clf.predict(X_test)
 acc_score = accuracy_score(y_test, y_p)
-print('Gaussian NB accuracy: %.4f' % acc_score)
+print('Gaussian NB accuracy: %.4f\n' % acc_score)
 
 # Decision tree
 clf = DecisionTreeClassifier(random_state=0)
@@ -86,4 +89,99 @@ clf = DecisionTreeClassifier(**bp, random_state=0)
 clf.fit(X_train, y_train)
 y_p = clf.predict(X_test)
 acc_score = accuracy_score(y_test, y_p)
-print('Decision tree accuracy: %.4f' % acc_score)
+print('Decision tree accuracy: %.4f\n' % acc_score)
+
+# Bagging with decision tree
+dt = DecisionTreeClassifier(random_state=0)
+clf = BaggingClassifier(base_estimator=dt, n_estimators=100, random_state=0)
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('default Bagging with decision tree accuracy: %.4f\n' % acc_score)
+
+# Bagging with decision tree
+gnb = GaussianNB()
+clf = BaggingClassifier(base_estimator=gnb, n_estimators=100, random_state=0)
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('default Bagging with gnb: %.4f\n' % acc_score)
+
+# random forest
+clf = RandomForestClassifier(random_state=0)
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('default random forest: %.4f\n' % acc_score)
+
+rf = RandomForestClassifier(random_state=0)
+param_grid = {"criterion": ["gini", "entropy"],
+              "min_samples_split": range(2, 100, 2)}
+clf = GridSearchCV(rf, param_grid)
+clf.fit(X_train, y_train)
+bp = clf.best_params_
+print('estimated parameters')
+for k, v in bp.items():
+    print("\t{:<20s}: {}".format(k, v))
+
+clf = RandomForestClassifier(**bp, random_state=0)
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('Random forest accuracy: %.4f\n' % acc_score)
+
+# random forest
+clf = AdaBoostClassifier(random_state=0)
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('default AdaBoost: %.4f\n' % acc_score)
+
+# KNN
+clf = KNeighborsClassifier(n_neighbors=2)
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('default knn: %.4f\n' % acc_score)
+
+# SGD
+clf = SGDClassifier()
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('default sgdc: %.4f\n' % acc_score)
+
+# SVM
+clf = SVC()
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('default svm: %.4f\n' % acc_score)
+
+svm = SVC()
+param_grid = [
+  {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
+  {'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
+ ]
+clf = GridSearchCV(svm, param_grid)
+clf.fit(X_train, y_train)
+bp = clf.best_params_
+print('estimated parameters')
+for k, v in bp.items():
+    print("\t{:<20s}: {}".format(k, v))
+
+clf = SVC(**bp)
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('SVM accuracy: %.4f\n' % acc_score)
+
+
+# Logistic regression
+clf = LogisticRegression()
+clf.fit(X_train, y_train)
+y_p = clf.predict(X_test)
+acc_score = accuracy_score(y_test, y_p)
+print('default logistic regression: %.4f\n' % acc_score)
+
+
