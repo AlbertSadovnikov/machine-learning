@@ -162,3 +162,63 @@ for idx, clf in enumerate([clf_A, clf_B, clf_C], start=1):
         train_predict(clf, X_train[:train_set_size], y_train[:train_set_size], X_test, y_test)
 
     sys.stdout.write('\n\n')
+
+# TODO: Import 'GridSearchCV' and 'make_scorer'
+from sklearn.grid_search import GridSearchCV
+from sklearn.metrics import make_scorer, f1_score
+
+# # TODO: Create the parameters list you wish to tune
+# parameters = [{'kernel': ['rbf'], 'gamma': [1e-2, 1e-3, 1e-4, 1e-5], 'C': [1, 10, 100, 1000]},
+#               {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+#
+# # TODO: Initialize the classifier
+# clf = SVC()
+#
+# # TODO: Make an f1 scoring function using 'make_scorer'
+# f1_scorer = make_scorer(f1_score, pos_label='yes')
+#
+# # TODO: Perform grid search on the classifier using the f1_scorer as the scoring method
+# grid_obj = GridSearchCV(clf, parameters, scoring=f1_scorer)
+#
+# # TODO: Fit the grid search object to the training data and find the optimal parameters
+# grid_obj = grid_obj.fit(X_train, y_train)
+#
+# # Get the estimator
+# clf = grid_obj.best_estimator_
+# print(grid_obj.best_estimator_)
+#
+# # Report the final F1 score for training and testing after parameter tuning
+# print "Tuned model has a training F1 score of {:.4f}.".format(predict_labels(clf, X_train, y_train))
+# print "Tuned model has a testing F1 score of {:.4f}.".format(predict_labels(clf, X_test, y_test))
+#
+
+# TODO: Create the parameters list you wish to tune
+parameters = {"max_depth": [3, None],
+              "max_features": range(10, 31),
+              "min_samples_split": range(1, 100),
+              "min_samples_leaf": range(1, 100),
+              "bootstrap": [True, False],
+              "criterion": ["gini", "entropy"]}
+
+# TODO: Initialize the classifier
+clf = RandomForestClassifier(n_estimators=20)
+
+# TODO: Make an f1 scoring function using 'make_scorer'
+f1_scorer = make_scorer(f1_score, pos_label='yes')
+
+# TODO: Perform grid search on the classifier using the f1_scorer as the scoring method
+grid_obj = GridSearchCV(clf, parameters, scoring=f1_scorer)
+
+# TODO: Fit the grid search object to the training data and find the optimal parameters
+grid_obj = grid_obj.fit(X_train, y_train)
+
+# Get the estimator
+clf = grid_obj.best_estimator_
+print(grid_obj.best_estimator_)
+
+# Report the final F1 score for training and testing after parameter tuning
+p_train, _ = predict_labels(clf, X_train, y_train)
+p_test, _ = predict_labels(clf, X_test, y_test)
+
+print "Tuned model has a training F1 score of {:.4f}.".format(p_train)
+print "Tuned model has a testing F1 score of {:.4f}.".format(p_test)
