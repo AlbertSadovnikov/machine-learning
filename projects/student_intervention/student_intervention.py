@@ -141,14 +141,13 @@ def train_predict(clf, X_train, y_train, X_test, y_test):
 
 # TODO: Import the three supervised learning models from sklearn
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from itertools import product
 
 # TODO: Initialize the three models
 clf_A = DecisionTreeClassifier(random_state=0)
 clf_B = RandomForestClassifier(random_state=0)
-clf_C = SVC(random_state=0)
+clf_C = GradientBoostingClassifier(random_state=0)
 
 
 # TODO: Execute the 'train_predict' function for each classifier and each training set size
@@ -167,41 +166,15 @@ for idx, clf in enumerate([clf_A, clf_B, clf_C], start=1):
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import make_scorer, f1_score
 
-# # TODO: Create the parameters list you wish to tune
-# parameters = [{'kernel': ['rbf'], 'gamma': [1e-2, 1e-3, 1e-4, 1e-5], 'C': [1, 10, 100, 1000]},
-#               {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
-#
-# # TODO: Initialize the classifier
-# clf = SVC()
-#
-# # TODO: Make an f1 scoring function using 'make_scorer'
-# f1_scorer = make_scorer(f1_score, pos_label='yes')
-#
-# # TODO: Perform grid search on the classifier using the f1_scorer as the scoring method
-# grid_obj = GridSearchCV(clf, parameters, scoring=f1_scorer)
-#
-# # TODO: Fit the grid search object to the training data and find the optimal parameters
-# grid_obj = grid_obj.fit(X_train, y_train)
-#
-# # Get the estimator
-# clf = grid_obj.best_estimator_
-# print(grid_obj.best_estimator_)
-#
-# # Report the final F1 score for training and testing after parameter tuning
-# print "Tuned model has a training F1 score of {:.4f}.".format(predict_labels(clf, X_train, y_train))
-# print "Tuned model has a testing F1 score of {:.4f}.".format(predict_labels(clf, X_test, y_test))
-#
-
-# TODO: Create the parameters list you wish to tune
-parameters = {"max_depth": [3, None],
-              "max_features": range(10, 31),
-              "min_samples_split": range(1, 100),
-              "min_samples_leaf": range(1, 100),
-              "bootstrap": [True, False],
-              "criterion": ["gini", "entropy"]}
+#  TODO: Create the parameters list you wish to tune
+parameters = {"loss": ('deviance', 'exponential'),
+              "learning_rate": (0.0001, 0.001, 0.01, 0.1, 0.5),
+              "max_depth": (2, 3, 4, 5, 6),
+              "min_samples_split": (2, 3, 4, 5, 6, 10),
+              "max_features": (None, "auto", 10, 15)}
 
 # TODO: Initialize the classifier
-clf = RandomForestClassifier(n_estimators=20)
+clf = GradientBoostingClassifier(n_estimators=100, random_state=0)
 
 # TODO: Make an f1 scoring function using 'make_scorer'
 f1_scorer = make_scorer(f1_score, pos_label='yes')
