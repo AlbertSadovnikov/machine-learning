@@ -149,7 +149,6 @@ clf_A = DecisionTreeClassifier(random_state=0)
 clf_B = RandomForestClassifier(random_state=0)
 clf_C = GradientBoostingClassifier(random_state=0)
 
-
 # TODO: Execute the 'train_predict' function for each classifier and each training set size
 for idx, clf in enumerate([clf_A, clf_B, clf_C], start=1):
     sys.stdout.write('** Classifier %d - %s **\n\n' % (idx, clf.__class__.__name__))
@@ -168,13 +167,12 @@ from sklearn.metrics import make_scorer, f1_score
 
 #  TODO: Create the parameters list you wish to tune
 parameters = {"loss": ('deviance', 'exponential'),
-              "learning_rate": (0.0001, 0.001, 0.01, 0.1, 0.5),
-              "max_depth": (2, 3, 4, 5, 6),
-              "min_samples_split": (2, 3, 4, 5, 6, 10),
-              "max_features": (None, "auto", 10, 15)}
+              "learning_rate": (0.001, 0.01, 0.1),
+              "max_depth": (2, 3, 5),
+              "min_samples_split": (2, 3, 5)}
 
 # TODO: Initialize the classifier
-clf = GradientBoostingClassifier(n_estimators=100, random_state=0)
+clf = GradientBoostingClassifier(n_estimators=200, random_state=0)
 
 # TODO: Make an f1 scoring function using 'make_scorer'
 f1_scorer = make_scorer(f1_score, pos_label='yes')
