@@ -14,10 +14,10 @@ class LearningAgent(Agent):
         self.valid_actions = self.env.valid_actions  # The set of valid actions
 
         # Set parameters of the learning agent
-        self.learning = learning # Whether the agent is expected to learn
-        self.Q = dict()          # Create a Q-table which will be a dictionary of tuples
-        self.epsilon = epsilon   # Random exploration factor
-        self.alpha = alpha       # Learning factor
+        self.learning = learning  # Whether the agent is expected to learn
+        self.Q = dict()           # Create a Q-table which will be a dictionary of tuples
+        self.epsilon = epsilon    # Random exploration factor
+        self.alpha = alpha        # Learning factor
 
         ###########
         ## TO DO ##
@@ -103,9 +103,11 @@ class LearningAgent(Agent):
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
- 
-        return action
 
+        if not self.learning:
+            action = random.choice(self.valid_actions)
+
+        return action
 
     def learn(self, state, action, reward):
         """ The learn function is called after the agent completes an action and
@@ -153,7 +155,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent)
+    agent = env.create_agent(LearningAgent, learning=True)
     
     ##############
     # Follow the driving agent
