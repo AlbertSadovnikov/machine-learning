@@ -299,7 +299,6 @@ class Simulator(object):
             else:
                 print "Agent not set to learn."
 
-                
     def render(self, trial, testing=False):
         """ This is the GUI render display of the simulation. 
             Supplementary trial data can be found from render_text. """
